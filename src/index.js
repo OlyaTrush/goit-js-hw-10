@@ -1,9 +1,9 @@
 import './css/styles.css';
 import debounce from 'lodash.debounce';
 import Notiflix from 'notiflix';
-import fetchCountries from './fetchCountries';
-import countryCard from './country-card.hbs';
-import countryItem from './country-item.hbs';
+import fetchCountries from './API/fetchCountries';
+import countryItem from './templates/country-item.hbs'
+import countryCard from './templates/country-card.hbs';
 
 const DEBOUNCE_DELAY = 300;
 const input = document.querySelector('#search-box');
@@ -33,13 +33,13 @@ function renderCountries(countries) {
       .join('');
     countryCardWrap.innerHTML = markup;
     countryList.innerHTML = '';
-  } else if (countries.length > 10) {
+  } else if (countries.length >= 10) {
     countryList.innerHTML = '';
     countryCardWrap.innerHTML = '';
     Notiflix.Notify.success(
       'Too many matches found. Please enter a more specific name.'
     );
-  } else {
+  } else if (countries.length > 1){
     const markup = countries
       .map(country => {
         return countryItem(country);
@@ -50,10 +50,11 @@ function renderCountries(countries) {
   }
 }
 
-function onFetchError(Error) {
+function onFetchError(error) {
+  if (Number(error.message) === 404)
+    Notiflix.Notify.failure('Oops, there is no country with that name');
   countryList.innerHTML = '';
   countryCardWrap.innerHTML = '';
-  Notiflix.Notify.failure('Oops, there is no country with that name');
 }
 
 input.addEventListener('input', debounce(onInput, DEBOUNCE_DELAY));
