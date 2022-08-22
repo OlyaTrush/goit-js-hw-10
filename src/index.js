@@ -2,7 +2,7 @@ import './css/styles.css';
 import debounce from 'lodash.debounce';
 import Notiflix from 'notiflix';
 import fetchCountries from './API/fetchCountries';
-import countryItem from './templates/country-item.hbs'
+import countryItem from './templates/country-item.hbs';
 import countryCard from './templates/country-card.hbs';
 
 const DEBOUNCE_DELAY = 300;
@@ -26,7 +26,7 @@ function renderCountries(countries) {
   if (countries.length === 1) {
     const markup = countries
       .map(country => {
-        const languages = Object.values(country.languages).join(', ');
+        const languages = Object.values(country.languages).join(',');
         country.languages = languages;
         return countryCard(country);
       })
@@ -39,7 +39,7 @@ function renderCountries(countries) {
     Notiflix.Notify.success(
       'Too many matches found. Please enter a more specific name.'
     );
-  } else if (countries.length > 1){
+  } else if (countries.length > 1) {
     const markup = countries
       .map(country => {
         return countryItem(country);
